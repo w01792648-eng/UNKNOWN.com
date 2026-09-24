@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Mikhail Tal - Morse Code</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+
+            min-height: 100vh;
+
+            font-family:
+                Georgia,
+                "Times New Roman",
+                serif;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    #3a2b18 0%,
+                    #15120e 35%,
+                    #080808 75%
+                );
+
+            color: #f5f1e8;
+
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        header {
+
+            text-align: center;
+
+            padding:
+                50px
+                20px
+                35px;
+
+        }
+
+
+        header h1 {
+
+            font-size:
+                clamp(2.5rem, 7vw, 5rem);
+
+            color: #d9ad5b;
+
+            letter-spacing: 5px;
+
+            text-shadow:
+                0 0 25px
+                rgba(217, 173, 91, 0.25);
+
+        }
+
+
+        header p {
+
+            margin-top: 12px;
+
+            color: #aaa59a;
+
+            font-family: Arial, sans-serif;
+
+            letter-spacing: 2px;
+
+            font-size: 0.9rem;
+
+        }
+
+
+        .gold-line {
+
+            width: 180px;
+
+            height: 3px;
+
+            margin: 25px auto;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    #d9ad5b,
+                    transparent
+                );
+
+        }
+
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        main {
+
+            width: 94%;
+
+            max-width: 1400px;
+
+            margin:
+                0 auto
+                80px;
+
+        }
+
+
+        /* SIDE BY SIDE */
+
+        .translator {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 25px;
+
+        }
+
+
+        /* =========================
+           PANELS
+        ========================= */
+
+        .panel {
+
+            background:
+                rgba(25, 25, 28, 0.95);
+
+            border:
+                1px solid
+                rgba(217, 173, 91, 0.3);
+
+            border-radius: 18px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 20px 60px
+                rgba(0, 0, 0, 0.5);
+
+        }
+
+
+        .panel-label {
+
+            color: #8f897d;
+
+            font-family: Arial, sans-serif;
+
+            font-size: 0.75rem;
+
+            letter-spacing: 2px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .panel h2 {
+
+            color: #d9ad5b;
+
+            margin-bottom: 18px;
+
+            font-size: 1.5rem;
+
+        }
+
+
+        /* =========================
+           MORSE TEXT AREA
+        ========================= */
+
+        #morseText {
+
+            width: 100%;
+
+            height: 500px;
+
+            resize: vertical;
+
+            padding: 20px;
+
+            border-radius: 12px;
+
+            border:
+                1px solid
+                #51452f;
+
+            outline: none;
+
+            background: #101012;
+
+            color: #e7d6ad;
+
+            font-family:
+                "Courier New",
+                monospace;
+
+            font-size: 0.95rem;
+
+            line-height: 1.8;
+
+        }
+
+
+        #morseText:focus {
+
+            border-color: #d9ad5b;
+
+            box-shadow:
+                0 0 15px
+                rgba(217, 173, 91, 0.2);
+
+        }
+
+
+        /* =========================
+           ENGLISH TRANSLATION
+        ========================= */
+
+        #translation {
+
+            width: 100%;
+
+            height: 500px;
+
+            padding: 20px;
+
+            border-radius: 12px;
+
+            border:
+                1px solid
+                #51452f;
+
+            background: #101012;
+
+            color: #eee9df;
+
+            font-family: Arial, sans-serif;
+
+            font-size: 1rem;
+
+            line-height: 1.8;
+
+            white-space: pre-line;
+
+            overflow-y: auto;
+
+        }
+
+
+        /* =========================
+           BOTTOM BUTTON
+        ========================= */
+
+        #translateBtn {
+
+            position: fixed;
+
+            right: 25px;
+
+            bottom: 25px;
+
+            padding:
+                16px
+                25px;
+
+            border: none;
+
+            border-radius: 50px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #d9ad5b,
+                    #a8792e
+                );
+
+            color: #111;
+
+            font-size: 1rem;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 8px 25px
+                rgba(0, 0, 0, 0.5);
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease;
+
+            z-index: 1000;
+
+        }
+
+
+        #translateBtn:hover {
+
+            transform:
+                translateY(-4px);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f0c873,
+                    #c08c3b
+                );
+
+        }
+
+
+        #translateBtn:active {
+
+            transform:
+                scale(0.95);
+
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+
+            text-align: center;
+
+            padding: 25px;
+
+            color: #706c64;
+
+            font-family: Arial, sans-serif;
+
+            font-size: 0.85rem;
+
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 800px) {
+
+            .translator {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            #morseText,
+            #translation {
+
+                height: 400px;
+
+            }
+
+
+            #translateBtn {
+
+                right: 15px;
+
+                bottom: 15px;
+
+                padding:
+                    14px
+                    20px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <header>
+
+        <h1>
+            MIKHAIL TAL
+        </h1>
+
+        <div class="gold-line"></div>
+
+        <p>
+            THE MAGICIAN OF RIGA
+            •
+            MORSE CODE ARCHIVE
+        </p>
+
+    </header>
+
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================= -->
+
+    <main>
+
+        <div class="translator">
+
+
+            <!-- LEFT SIDE -->
+
+            <section class="panel">
+
+                <div class="panel-label">
+                    Original
+                </div>
+
+                <h2>
+                    ♟ Morse Code
+                </h2>
+
+
+                <textarea id="morseText">-- .. -.- .... .- .. .-.. / - .- .-.. / .-- .- ... / .- / -... .- -- .--. ..- .-.. / -.-. .... . ... ... / .--. .-.. .- -.-- . .-. .-.-.-
+
+.... . / .-- .- ... / -... --- .-. -. / .. -. / .-.. .- - ...- .. .- .-.-.-
+
+.... . / -... . -.-. .- -- . / .- / -.-. .... . ... ... / --. .-. .- -. -.. -- .- ... - . .-. .-.-.-
+
+.... . / .-- --- -. / - .... . / .-- --- .-. .-.. -.. / -.-. .... . ... ... / -.-. .... .- -- .--. .. --- -. ... .... .. .--. .-.-.-
+
+.... . / .-- .- ... / -.- -. --- .-- -. / .- ... / - .... . / -- .- --. .. -.-. .. .- -. / --- ..-. / -.-. .... . ... ... .-.-.-
+
+.... .. ... / ... - -.-- .-.. . / .-- .- ... / -... .-. .. .-.. .-.. .. .- -. - / .- -. -.. / -... --- .-.. -.. .-.-.-
+
+.... . / .-.. --- ...- . -.. / - --- / .--. .-.. .- -.-- / -.-. --- -- .--. .-.. . -..- / .- -. -.. / -.-. .-. .- - .. -.-. .- .-.. / -- --- ...- . ... .-.-.-
+
+.... . / -.-. --- -. ... .. -.. . .-. . -.. / -.-. .... . ... ... / .- / -.-. .-. . .- - .. ...- . / .- .-. - .-.-.-
+
+.... .. ... / -.-. .... . ... ... / --. .- -- . ... / .- .-. . / ... - .. .-.. .-.. / ... - ..- -.. .. . -.. / - --- -.. .- -.-- .-.-.-
+
+-- .. -.- .... .- .. .-.. / - .- .-.. / .-. . -- .- .. -. ... / --- -. . / --- ..-. / - .... . / -- --- ... - / .. -. - . .-. . ... - .. -. --. / -.-. .... . ... ... / .--. .-.. .- -.-- . .-. ... .-.-.-</textarea>
+
+            </section>
+
+
+
+            <!-- RIGHT SIDE -->
+
+            <section class="panel">
+
+                <div class="panel-label">
+                    Translation
+                </div>
+
+                <h2>
+                    ♔ English
+                </h2>
+
+
+                <!--
+                    Starts EMPTY
+                -->
+
+                <div id="translation"></div>
+
+            </section>
+
+
+        </div>
+
+    </main>
+
+
+
+    <footer>
+
+        Mikhail Tal
+        •
+        The Magician of Riga
+
+    </footer>
+
+
+
+    <!-- =========================
+         TRANSLATE BUTTON
+    ========================= -->
+
+    <button
+        id="translateBtn"
+        onclick="translateMorse()">
+
+        Translate to English
+
+    </button>
+
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
+
+    <script>
+
+
+        /* =========================
+           MORSE DICTIONARY
+        ========================= */
+
+        const morseDictionary = {
+
+            ".-": "A",
+            "-...": "B",
+            "-.-.": "C",
+            "-..": "D",
+            ".": "E",
+            "..-.": "F",
+            "--.": "G",
+            "....": "H",
+            "..": "I",
+            ".---": "J",
+            "-.-": "K",
+            ".-..": "L",
+            "--": "M",
+            "-.": "N",
+            "---": "O",
+            ".--.": "P",
+            "--.-": "Q",
+            ".-.": "R",
+            "...": "S",
+            "-": "T",
+            "..-": "U",
+            "...-": "V",
+            ".--": "W",
+            "-..-": "X",
+            "-.--": "Y",
+            "--..": "Z",
+
+            "-----": "0",
+            ".----": "1",
+            "..---": "2",
+            "...--": "3",
+            "....-": "4",
+            ".....": "5",
+            "-....": "6",
+            "--...": "7",
+            "---..": "8",
+            "----.": "9",
+
+            ".-.-.-": ".",
+            "--..--": ",",
+            "..--..": "?",
+            "-.-.--": "!",
+            ".----.": "'",
+            "-..-.": "/",
+            "-.--.": "(",
+            "-.--.-": ")",
+            ".-...": "&",
+            "---...": ":",
+            "-.-.-.": ";",
+            "-...-": "=",
+            ".-.-.": "+",
+            "-....-": "-",
+            "..--.-": "_",
+            ".-..-.": "\"",
+            "...-..-": "$",
+            ".--.-.": "@"
+
+        };
+
+
+
+        /* =========================
+           TRANSLATION STATE
+        ========================= */
+
+        let translationVisible = false;
+
+
+
+        /* =========================
+           DECODE ONE WORD
+        ========================= */
+
+        function decodeWord(word) {
+
+            return word
+                .trim()
+                .split(/\s+/)
+                .map(function(code) {
+
+                    return morseDictionary[code] || " ";
+
+                })
+                .join("");
+
+        }
+
+
+
+        /* =========================
+           TRANSLATE / HIDE
+        ========================= */
+
+        function translateMorse() {
+
+            const translation =
+                document.getElementById(
+                    "translation"
+                );
+
+            const button =
+                document.getElementById(
+                    "translateBtn"
+                );
+
+
+            /*
+                SECOND CLICK
+
+                If translation is visible,
+                remove it.
+            */
+
+            if (translationVisible === true) {
+
+                translation.textContent = "";
+
+                translationVisible = false;
+
+                button.textContent =
+                    "Translate to English";
+
+                return;
+
+            }
+
+
+
+            /*
+                FIRST CLICK
+
+                Get Morse code.
+            */
+
+            const input =
+                document.getElementById(
+                    "morseText"
+                ).value.trim();
+
+
+
+            /*
+                Empty input check
+            */
+
+            if (input === "") {
+
+                translation.textContent =
+                    "Please enter Morse code.";
+
+                translationVisible = true;
+
+                button.textContent =
+                    "Hide Translation";
+
+                return;
+
+            }
+
+
+
+            /*
+                Split paragraphs
+            */
+
+            const paragraphs =
+                input.split(/\n\s*\n/);
+
+
+
+            /*
+                Translate every paragraph
+            */
+
+            const translated =
+                paragraphs
+                .map(function(paragraph) {
+
+                    return paragraph
+                        .split("/")
+                        .map(function(word) {
+
+                            return decodeWord(word);
+
+                        })
+                        .join(" ");
+
+                })
+                .join("\n\n");
+
+
+
+            /*
+                Display translation
+            */
+
+            translation.textContent =
+                translated;
+
+
+
+            /*
+                Update state
+            */
+
+            translationVisible = true;
+
+            button.textContent =
+                "Hide Translation";
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>
